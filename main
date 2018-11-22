@@ -1,0 +1,146 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import java.io.*;
+
+public class Program /*implements ActionListener*/ {
+
+    JFrame frame;
+    JLabel label;
+
+    public static void main (String[] args) {
+        Program prog = new Program();
+        prog.go();
+    }
+
+    public void go() {
+        /*JFrame */frame = new JFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        JButton button_input = new JButton("Input");
+        button_input.addActionListener(new InputListener());
+
+        JButton button_output = new JButton("Output");
+        button_output.addActionListener(new OutputListener());
+
+        frame.getContentPane().add(BorderLayout.WEST, button_input);
+        frame.getContentPane().add(BorderLayout.EAST, button_output);
+
+        frame.setSize(300,300);
+        frame.setVisible(true);
+
+    }
+
+    class InputListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            //InputStream f = new FileInputStream("matrixAdjacency.txt");
+            int k = numberEdges(matrixAdjacency);
+            int l = size(matrixAdjacency.length);//System.out.println(k+" "+l);
+            byte[][] matrixIncidence = msmi(matrixAdjacency, k, l);//pr(matrixIncidence);
+        }
+
+    }
+
+    class OutputListener implements ActionListener {
+        public void actionPerformed(ActionEvent event) {
+            int a=1,b=5;
+            //Program prog = new Program();//InputListener il = new InputListener();
+            if(qaz(matrixIncidence, a, b)) {
+
+            }
+            else {
+                System.out.println("Пути из вершины " + a + " в вершину " + b + " не существует.");
+            }
+                        
+        }
+        
+        public InputListener getMatrixIncidence() {
+                return matrixIncidence;
+            }
+    }
+
+    byte[][] matrixAdjacency = {
+            {0,0,0,0,0,0},
+            {1,0,1,0,0,0},
+            {0,0,0,0,0,1},
+            {0,0,1,0,1,0},
+            {0,0,0,0,0,0},
+            {1,0,0,1,1,0}
+        };
+
+    int numberEdges (byte[][] matrixAdjacency) {
+        int i,j,k=0,t=matrixAdjacency.length,u;
+
+        for(i=0; i<t; i++) {
+            u = matrixAdjacency[i].length;
+            for(j=0; j<u; j++) {
+                if(matrixAdjacency[i][j] == 1) {
+                    k++;
+                }
+            }
+        }
+        return k;
+    }
+
+    int size (int matrixAdjacencyLength) {
+        int a = matrixAdjacencyLength*2;
+        int b = a%16;
+        int c = a/16;
+        int d = (int)Math.round(c);
+        int e = (((b!=0)&&(b<16))?(d+1):d)*16;
+        return e;
+    }
+
+    byte[][] msmi(byte[][] matrixAdjacency, int k, int l) {
+        byte[][] matrixIncidence = new byte[k][l];
+        int i,j,a=matrixAdjacency.length,b;
+        k = -1;
+        for(i=0; i<a; i++) {
+            b = matrixAdjacency[i].length;
+            for(j=0; j<b; j++) {
+                if(matrixAdjacency[i][j] == 1) {
+                    k++;
+                    matrixIncidence[k][i*2] = 1;
+                    matrixIncidence[k][(j*2)+1] = 1;
+                }
+            }
+        }
+        return matrixIncidence;
+    }
+
+    void pr (byte[][] matrix) {
+        int i,j;
+        for(i=0; i<matrix.length; i++) {
+            for(j=0; j<matrix[i].length; j++) {
+                System.out.print(matrix[i][j]);
+            }System.out.println();
+        }
+    }
+
+    boolean qaz(byte[][] matrixIncidence, int a, int b) {
+        int aa=xx(a),bb=xx(b)+1;
+        boolean q = false;
+        if(ert(matrixIncidence, aa) && ert(matrixIncidence, bb)) {
+            q = true;
+        }
+        return q;
+    }
+
+    int xx(int x) {
+        x = (x-1)*2;
+        return x;
+    }
+
+    boolean ert (byte[][] matrixIncidence, int x) {
+        boolean l = false;
+        int k=matrixIncidence.length;
+        for(int i=0; i<k; i++) {
+            if(matrixIncidence[i][x] == 1) {
+                l = true;
+                break;
+            }
+        }
+        return l;
+    }
+}
